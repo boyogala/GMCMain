@@ -34,3 +34,6 @@ __pycache__/
 data/
 *.env
 secrets/
+
+# 已停用的商业字体留档目录：仅本地保存追溯用，绝不随仓库分发
+filedeleted/

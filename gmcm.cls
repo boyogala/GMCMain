@@ -12,8 +12,13 @@
 %%   西文无衬线 TeX Gyre Heros（与 Helvetica 同度量）fonts/texgyreheros-*.otf
 %%   西文等宽   TeX Gyre Cursor（代码清单、\texttt） fonts/texgyrecursor-*.otf
 %%   数学       STIX Two Math                       fonts/STIXTwoMath-Regular.otf
-%%   中文       宋体 / 黑体 / 楷体 / 仿宋 / 隶书 / 华文新魏 / 华文中宋  fonts/*.ttf
+%%   中文正文   思源宋体 Source Han Serif SC        fonts/SourceHanSerifSC-*.otf
+%%   中文标题   思源黑体 Source Han Sans SC         fonts/SourceHanSansSC-*.otf
+%%   中文楷体   霞鹜文楷 LXGW WenKai                fonts/LXGWWenKai-*.ttf
+%%   中文仿宋   Fandol Fang                        fonts/FandolFang-Regular.otf
 %%   若整体移动 fonts/ 目录，只需修改下方的 \gmcm@fontpath（须以 / 结尾）
+%%
+%% 全部字体均为开源授权（SIL OFL 1.1 / GPL + font exception），授权全文见 fonts/LICENSES/
 %%
 %% 类选项：
 %%   [coverpagenumber]  封面页脚显示页码 0（与 Word 模板一致）；默认封面不显示页码
@@ -109,26 +114,34 @@
 % ---- 数学：STIX Two Math，公式中的数字、字母、运算符与数学字母表全部取自该字体 ----
 \setmathfont[Path=\gmcm@fontpath]{STIXTwoMath-Regular.otf}
 
-% ---- 中文：默认罗马族 = 宋体（粗体伪加粗，斜体用楷体，与 Word 习惯一致）----
-\setCJKmainfont[Path=\gmcm@fontpath,AutoFakeBold=2.5,ItalicFont=SimKai.ttf,BoldItalicFont=SimKai.ttf]{SimSun.ttc}
-\setCJKsansfont[Path=\gmcm@fontpath,AutoFakeBold=2.5]{SimHei.ttf}
-\setCJKmonofont[Path=\gmcm@fontpath,AutoFakeBold=2.5]{SimFang.ttf}
+% ---- 中文：默认罗马族 = 思源宋体（真实 Bold 字重，斜体用霞鹜文楷，与 Word 习惯一致）----
+\setCJKmainfont[Path=\gmcm@fontpath,
+  BoldFont       = SourceHanSerifSC-Bold.otf,
+  ItalicFont     = LXGWWenKai-Regular.ttf,
+  BoldItalicFont = LXGWWenKai-Regular.ttf]{SourceHanSerifSC-Regular.otf}
+\setCJKsansfont[Path=\gmcm@fontpath,
+  BoldFont = SourceHanSansSC-Bold.otf]{SourceHanSansSC-Regular.otf}
+\setCJKmonofont[Path=\gmcm@fontpath,AutoFakeBold=2.5]{LXGWWenKai-Regular.ttf}
 % ---- 中文字族命令（fontset=none 时 ctex 不再定义，这里自行定义）----
-\setCJKfamilyfont{zhsong}[Path=\gmcm@fontpath,AutoFakeBold=2.5,ItalicFont=SimKai.ttf]{SimSun.ttc}
-\setCJKfamilyfont{zhhei}[Path=\gmcm@fontpath,AutoFakeBold=2.5]{SimHei.ttf}
-\setCJKfamilyfont{zhkai}[Path=\gmcm@fontpath,AutoFakeBold=2.5]{SimKai.ttf}
-\setCJKfamilyfont{zhfs}[Path=\gmcm@fontpath,AutoFakeBold=2.5]{SimFang.ttf}
-% 隶书 LiSu.ttf 不含 OpenType script 表，若按 xeCJK 默认请求 CJK script 会触发 fontspec 警告；
-% 此处用 CustomDefault（不请求 script 特性）单独处理，不影响汉字显示
-\setCJKfamilyfont{zhli}[Path=\gmcm@fontpath,AutoFakeBold=2.5,Script=CustomDefault]{LiSu.ttf}
-\setCJKfamilyfont{zhxinwei}[Path=\gmcm@fontpath,AutoFakeBold=2.5]{STXinwei.ttf}
-\setCJKfamilyfont{zhzhongsong}[Path=\gmcm@fontpath,AutoFakeBold=2.5]{STZhongsong.ttf}
+\setCJKfamilyfont{zhsong}[Path=\gmcm@fontpath,
+  BoldFont       = SourceHanSerifSC-Bold.otf,
+  ItalicFont     = LXGWWenKai-Regular.ttf,
+  BoldItalicFont = LXGWWenKai-Regular.ttf]{SourceHanSerifSC-Regular.otf}
+\setCJKfamilyfont{zhhei}[Path=\gmcm@fontpath,
+  BoldFont = SourceHanSansSC-Bold.otf]{SourceHanSansSC-Regular.otf}
+\setCJKfamilyfont{zhkai}[Path=\gmcm@fontpath,AutoFakeBold=2.5]{LXGWWenKai-Regular.ttf}
+\setCJKfamilyfont{zhfs}[Path=\gmcm@fontpath,AutoFakeBold=2.5]{FandolFang-Regular.otf}
+% 霞鹜文楷为 TrueType 转换字体，script 表信息有限；此处用 CustomDefault（不请求 script 特性）
+% 单独处理，可避免 fontspec / xeCJK 的 script 探测警告，不影响汉字显示
+\setCJKfamilyfont{zhli}[Path=\gmcm@fontpath,AutoFakeBold=2.5,Script=CustomDefault]{LXGWWenKai-Light.ttf}
+% 华文中宋：思源宋体的粗字重（宋体家族中等字重，用于展示性标题）
+\setCJKfamilyfont{zhzhongsong}[Path=\gmcm@fontpath]{SourceHanSerifSC-Bold.otf}
 \newcommand{\songti}{\CJKfamily{zhsong}}
 \newcommand{\heiti}{\CJKfamily{zhhei}}
 \newcommand{\kaishu}{\CJKfamily{zhkai}}
 \newcommand{\fangsong}{\CJKfamily{zhfs}}
 \newcommand{\lishu}{\CJKfamily{zhli}}
-\newcommand{\xinwei}{\CJKfamily{zhxinwei}}
+\newcommand{\xinwei}{\CJKfamily{zhli}}
 \newcommand{\zhongsong}{\CJKfamily{zhzhongsong}}
 
 % ---------------------------------------------------------------------
