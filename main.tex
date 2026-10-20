@@ -1,0 +1,51 @@
+%% “华为杯”第二十三届中国研究生数学建模竞赛 论文 —— 主文件
+%% 编译：latexmk -xelatex main.tex   （或 xelatex main.tex 两遍）
+%%
+%% 类选项：coverpagenumber（封面显示页码 0）、nocover（无封面）
+%%
+%% ⚠ 隐私提示：下面的 \school / \teamnumber / \memberA..C 默认是占位符。
+%%   · 若本仓库公开，提交前请务必保持占位符，不要写入真实学校、队号、姓名；
+%%   · 真实信息只在本机填写并本地编译，PDF 成品单独提交，不要推送到公开仓库。
+\documentclass{gmcm}
+
+% ------------------------- 封面 / 摘要页信息 -------------------------
+\school{你的大学名称}                 % 学校
+\teamnumber{参赛队号}                 % 参赛队号（提交前填写）
+\memberA{队员1}                      % 队员 1（提交前填写）
+\memberB{队员2}                      % 队员 2（提交前填写）
+\memberC{队员3}                      % 队员 3（提交前填写）
+\title{研究生 数学建模 题目} % 题目（写在摘要页“题目：”之后）
+\keywords{关键词1；关键词2；关键词3；关键词4}
+
+% ------------------------- 自定义宏 -------------------------
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\dd}{\mathrm{d}}
+
+\begin{document}
+
+\makecover                          % 封面（不计页码）
+
+\begin{abstract}                    % 摘要页：页码从 1 开始
+\input{sections/abstract}
+\end{abstract}
+
+\tableofcontents                    % 目录：摘要、目录、各级标题、参考文献、附录
+
+% ------------------------- 正文（一级标题 四号黑体居中） -------------------------
+\input{sections/01_restatement}     % 问题重述
+\input{sections/02_analysis}        % 问题分析
+\input{sections/03_assumptions}     % 模型假设与符号说明
+\input{sections/04_model_q1}        % 问题一 模型建立与求解
+\input{sections/05_model_q2}        % 问题二 模型建立与求解
+\input{sections/06_model_q3}        % 问题三 模型建立与求解
+\input{sections/07_evaluation}      % 模型评价与推广
+
+% ------------------------- 参考文献（按格式规范手写） -------------------------
+\input{sections/references}
+
+% ------------------------- 附录 -------------------------
+\clearpage
+\appendix
+\input{sections/appendix}
+
+\end{document}

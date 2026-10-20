@@ -1,0 +1,36 @@
+# LaTeX 编译产物（.latexmkrc 中 $out_dir = 'build'）
+build/
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.xdv
+*.synctex.gz
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+
+# 生成的 PDF（论文成品按需另行归档，不随仓库提交）
+main.pdf
+
+# 编辑器与系统文件
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+
+# 本地私有文件（题面、原始数据、凭据等，禁止提交）
+data/
+*.env
+secrets/
