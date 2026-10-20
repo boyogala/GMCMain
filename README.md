@@ -540,30 +540,12 @@ grep -oE '[A-Za-z0-9_./-]+\.(otf|ttf|ttc)' build/main.log | sort -u
 
 ---
 
-## 10. 商业字体的替换与合规说明
+## 10. 字体的替换与合规说明
 
 > 本项目的**中文字体已全部替换为开源字体**，`fonts/` 目录中不含任何商业字体，可以放心公开托管。
 > 本节记录替换过程与结论，便于追溯与二次开发。
 
-### 10.1 替换前的字体与授权状况
-
-早期版本使用中易（ZhongYi）等公司的商业中文字体，其 `name` 表信息如下：
-
-| 原字体文件 | 原字体名 | 版权方 | `fsType` | 可否随仓库再分发 |
-|---|---|---|---|---|
-| `SimSun.ttc` | 宋体 SimSun | Beijing ZhongYi Electronics Co. | `0x0008` Editable | ❌ **不建议** |
-| `SimHei.ttf` | 黑体 SimHei | Beijing ZhongYi Electronics Co. 1995–2005 | `0x0008` Editable | ❌ **不建议** |
-| `SimKai.ttf` | 楷体 KaiTi | Beijing ZhongYi Electronics Co. 1995–2005 | `0x0008` Editable | ❌ **不建议** |
-| `SimFang.ttf` | 仿宋 FangSong | Beijing ZhongYi Electronics Co. 1995–2005 | `0x0008` Editable | ❌ **不建议** |
-| `LiSu.ttf` | 隶书 LiSu | Stone Co. 1996 | `0x0000` Installable Embedding | ❌ **不建议** |
-| `STXinwei.ttf` | 华文新魏 STXinwei | Changzhou SinoType Technology Co., Ltd. 1991–1998 | `0x0008` Editable | ❌ **不建议** |
-| `STZhongsong.ttf` | 华文中宋 STZhongsong | Changzhou SinoType Technology Co., Ltd. 1991–1998 | `0x0008` Editable | ❌ **不建议** |
-
-**为什么 `fsType = Editable` 仍不能分发？** `fsType` 描述的是「字体文件被嵌入 PDF 等文档时的权限」，**不是**「字体文件本身的再分发授权」。中易字体的授权文本明确限定：字体仅随「包含该字体的产品」使用，允许（i）以嵌入方式用于显示和打印内容，（ii）临时下载到打印机等输出设备——**未授予复制并公开分发的权利**。华文系列字体同样只声明了著作权归属，未授予再分发权。
-
-> 这些文件已移入本地留档目录 `filedeleted/`，并被 `.gitignore` 排除，**不会**随仓库上传。详见该目录下的 `README.md`。
-
-### 10.2 替换对照表（当前生效）
+### 10.1 替换对照表（当前生效）
 
 | 原商业字体 | 现用开源字体 | 文件 | 授权 | 下载来源 |
 |---|---|---|---|---|
@@ -585,7 +567,7 @@ grep -oE '[A-Za-z0-9_./-]+\.(otf|ttf|ttc)' build/main.log | sort -u
 | `fonts/LICENSES/LXGWWenKai-OFL-1.1.txt` | 霞鹜文楷 | SIL OFL 1.1 |
 | `fonts/LICENSES/Fandol-GPLv3-with-font-exception.txt` | Fandol 仿宋 | GPL v3 + font exception |
 
-### 10.3 手工复现下载与替换
+### 10.2 手工复现下载与替换
 
 如需重新获取字体文件，可按下列命令下载（均为官方发布地址）：
 
@@ -610,7 +592,7 @@ mv COPYING LICENSES/Fandol-GPLv3-with-font-exception.txt
 
 改用其他开源中文字体时，只需修改 `gmcm.cls` 第 118–138 行中 `\setCJKmainfont` / `\setCJKsansfont` / `\setCJKmonofont` 与各 `\setCJKfamilyfont` 指定的文件名，其余命令（`\songti`、`\heiti`…）保持不变即可。
 
-### 10.4 重新启用商业字体的注意事项
+### 10.3 重新启用商业字体的注意事项
 
 若你出于比赛排版要求需要恢复某款商业字体（例如必须与官方 Word 模板完全一致的宋体/黑体字形），请注意：
 
@@ -619,7 +601,7 @@ mv COPYING LICENSES/Fandol-GPLv3-with-font-exception.txt
 - 若确需在论文中使用这些字形但又不分发字体文件，可只提交**编译好的 PDF**（内嵌字体），不要把 `.ttf/.ttc/.otf` 一并提交；
 - 公开仓库请保持使用本项目的开源字体方案。
 
-### 10.5 已执行的 Git 历史清理
+### 10.4 已执行的 Git 历史清理
 
 本仓库在替换字体之前曾把商业字体提交过一次，**仅删除最新版本中的文件是不够的**——旧提交里仍能检出字体文件。
 本项目已用 `git filter-repo` 完成历史改写：
@@ -654,14 +636,14 @@ git ls-files | grep -iE 'SimSun|SimHei|SimKai|SimFang|LiSu|STXinwei|STZhongsong'
 > 2. 联系 [GitHub Support](https://support.github.com/contact) 请求清除缓存对象；
 > 3. 对于新建的、尚无协作者的仓库，最彻底的方式是**删除仓库后重新创建**。
 
-### 10.6 关于提交 PDF 成品
+### 10.5 关于提交 PDF 成品
 
 - 本模板编译出的 PDF 会**内嵌**所选字体（`pdffonts build/main.pdf` 可查看内嵌列表）。
 - 将 PDF 提交给组委会、或在实验室内部传阅，属于字体授权允许的「嵌入用于显示和打印」场景，通常无碍。
 - 本项目默认字体全部为开源授权，因此**公开发布论文 PDF 也没有额外的字体授权顾虑**。
 - GitHub 仓库已通过 `.gitignore` 排除 `build/`、`main.pdf` 与 `filedeleted/`，提交前用 `git status` 再确认一次。
 
-### 10.7 免责声明
+### 10.6 免责声明
 
 - 上述版权信息来源于字体文件内部的 `name` / `OS/2` 表，可能与厂商最新公布的条款存在出入。
 - 字体厂商可能更新授权条款、更名或停止分发，本节内容无法自动同步，请以官方最新声明为准。
