@@ -474,14 +474,50 @@ mv COPYING LICENSES/Fandol-GPLv3-with-font-exception.txt
 - 若确需在论文中使用这些字形但又不分发字体文件，可只提交**编译好的 PDF**（内嵌字体），不要把 `.ttf/.ttc/.otf` 一并提交；
 - 公开仓库请保持使用本项目的开源字体方案。
 
-### 9.5 关于提交 PDF 成品
+### 9.5 已执行的 Git 历史清理（已完成）
+
+本仓库在替换字体之前曾把商业字体提交过一次（提交 `264ae24`），**仅删除最新版本中的文件是不够的**——旧提交里仍能检出字体文件。
+本项目已用 `git filter-repo` 完成历史改写：
+
+```bash
+# 1) 安装（本次使用 uv；亦可用 pip install git-filter-repo）
+uv tool install git-filter-repo
+
+# 2) 从所有历史提交中移除整个 fonts/ 目录
+git filter-repo --path fonts --invert-paths --force
+
+# 3) 把换好的开源字体作为一个新提交加入
+cp -a /path/to/new_fonts fonts
+git add fonts && git commit -m "feat(fonts): add open-source CJK fonts"
+
+# 4) 强制推送覆盖远程
+git push --force origin main
+```
+
+改写后校验：
+
+```bash
+# 历史中不应再出现商业字体
+git log --all --oneline --name-only | grep -iE 'SimSun|SimHei|SimKai|SimFang|LiSu|STXinwei|STZhongsong'
+# 当前分支中也不应出现
+git ls-files | grep -iE 'SimSun|SimHei|SimKai|SimFang|LiSu|STXinwei|STZhongsong'
+```
+
+> ⚠ **改写历史会改变所有提交哈希**，协作者需要重新 `git clone`；`filter-repo` 还会移除 `origin` 远程，需手动 `git remote add origin <url>` 恢复。
+
+> ⚠ **已推送到 GitHub 的旧对象可能仍存在于服务器缓存中**。公开仓库如需彻底清除，请：
+> 1. 强制推送改写后的历史（使分支上不再可见），并
+> 2. 联系 [GitHub Support](https://support.github.com/contact) 请求清除缓存对象；
+> 3. 对于新建的、尚无协作者的仓库，最彻底的方式是**删除仓库后重新创建**。
+
+### 9.6 关于提交 PDF 成品
 
 - 本模板编译出的 PDF 会**内嵌**所选字体（`pdffonts build/main.pdf` 可查看内嵌列表）。
 - 将 PDF 提交给组委会、或在实验室内部传阅，属于字体授权允许的「嵌入用于显示和打印」场景，通常无碍。
 - 本项目默认字体全部为开源授权，因此**公开发布论文 PDF 也没有额外的字体授权顾虑**。
 - GitHub 仓库已通过 `.gitignore` 排除 `build/`、`main.pdf` 与 `filedeleted/`，提交前用 `git status` 再确认一次。
 
-### 9.6 免责声明
+### 9.7 免责声明
 
 - 上述版权信息来源于字体文件内部的 `name` / `OS/2` 表，可能与厂商最新公布的条款存在出入。
 - 字体厂商可能更新授权条款、更名或停止分发，本节内容无法自动同步，请以官方最新声明为准。
