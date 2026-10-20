@@ -17,13 +17,14 @@
 - [6. 编写正文](#6-编写正文)
 - [7. 命令与宏速查](#7-命令与宏速查)
 - [8. 字体说明](#8-字体说明)
-- [9. 格式规范对照表](#9-格式规范对照表)
-- [10. AI 工具使用标注](#10-ai-工具使用标注)
-- [11. 参考文献格式](#11-参考文献格式)
-- [12. 常见问题排查](#12-常见问题排查)
-- [13. 提交前自查清单](#13-提交前自查清单)
-- [14. 上传到 GitHub](#14-上传到-github)
-- [15. 许可与致谢](#15-许可与致谢)
+- [9. 商业字体的使用说明与注意事项](#9-商业字体的使用说明与注意事项)
+- [10. 格式规范对照表](#10-格式规范对照表)
+- [11. AI 工具使用标注](#11-ai-工具使用标注)
+- [12. 参考文献格式](#12-参考文献格式)
+- [13. 常见问题排查](#13-常见问题排查)
+- [14. 提交前自查清单](#14-提交前自查清单)
+- [15. 上传到 GitHub](#15-上传到-github)
+- [16. 许可与致谢](#16-许可与致谢)
 
 ---
 
@@ -379,12 +380,194 @@ latexmk -xelatex main.tex
 
 - 数学字体由 `unicode-math` 统一设置为 **STIX Two Math**：公式中的数字、字母、运算符，以及 `\mathbb`、`\mathcal`、`\mathfrak`、`\mathscr` 等数学字母表全部取自该文件，**不会**回落到 Computer Modern / AMS 字体。
 - **移动 `fonts/` 目录**：修改 `gmcm.cls` 第 86 行的 `\def\gmcm@fontpath{fonts/}`（路径**必须以 `/` 结尾**）。
-- **字体授权提醒**：TeX Gyre（`GUST Font License`）与 STIX Two Math（`SIL OFL 1.1`）可自由使用；而宋体/黑体/楷体/仿宋/隶书/华文新魏/华文中宋属于中易（ZhongYi）公司的商业字体，**再分发可能涉及版权问题**。若仓库对外公开，请自行评估是否改用开源字体（如思源宋体/黑体、Fandol 系列）或从 `fonts/` 中移除商业字体并在本地另装。
+- **字体授权提醒**：TeX Gyre（`GUST Font License`）与 STIX Two Math（`SIL OFL 1.1`）可自由使用并随仓库分发；而宋体/黑体/楷体/仿宋/隶书/华文新魏/华文中宋属于中易（ZhongYi）等公司的**商业字体**，**再分发可能涉及版权问题**。仓库若对外公开，请务必阅读 [第 9 节 商业字体的使用说明与注意事项](#9-商业字体的使用说明与注意事项)，并按 9.3 方案 A 换用开源字体。
 - `LiSu.ttf` 不含 OpenType script 表，类中已用 `Script=CustomDefault` 单独处理，避免 fontspec 警告。
 
 ---
 
-## 9. 格式规范对照表
+## 9. 商业字体的使用说明与注意事项
+
+> 本节针对 `fonts/` 目录中的**中文字体**。西文与数学字体（TeX Gyre、STIX Two Math）为开源授权，无此顾虑。
+> ⚠ 本节是**使用须知**，不是法律意见；涉及商业用途或公开发布时，请自行确认最新授权条款或咨询版权方。
+
+### 9.1 字体授权一览
+
+下表的版权方信息取自字体文件内部的 `name` 表（可用 `fc-scan`、`otfinfo -i` 或 fontTools 读取），`fsType` 取自 `OS/2` 表。
+
+| 字体文件 | 字体名 | 版权方 | 授权类型 | `fsType` | 可否随仓库再分发 |
+|---|---|---|---|---|---|
+| `fonts/texgyre*.otf` | TeX Gyre Termes / Heros / Cursor | TeX Users Group（B. Jackowski、J.M. Nowacki） | GUST Font License | `0x000C` Preview&Print + Editable | ✅ **可以** |
+| `fonts/STIXTwoMath-Regular.otf` | STIX Two Math | STIX Fonts Project Authors / Tiro Typeworks Ltd. | SIL Open Font License 1.1 | `0x0000` Installable Embedding | ✅ **可以**（须保留 OFL 声明） |
+| `fonts/SimSun.ttc` | 宋体 SimSun | Beijing ZhongYi Electronics Co.（中易电子） | 随附软件使用条款 | `0x0008` Editable | ❌ **不建议** |
+| `fonts/SimHei.ttf` | 黑体 SimHei | Beijing ZhongYi Electronics Co., 1995–2005 | 同上 | `0x0008` Editable | ❌ **不建议** |
+| `fonts/SimKai.ttf` | 楷体 KaiTi | Beijing ZhongYi Electronics Co., 1995–2005 | 同上 | `0x0008` Editable | ❌ **不建议** |
+| `fonts/SimFang.ttf` | 仿宋 FangSong | Beijing ZhongYi Electronics Co., 1995–2005 | 同上 | `0x0008` Editable | ❌ **不建议** |
+| `fonts/LiSu.ttf` | 隶书 LiSu | Stone Co., 1996 | 未提供自由再分发条款 | `0x0000` Installable Embedding | ❌ **不建议** |
+| `fonts/STXinwei.ttf` | 华文新魏 STXinwei | Changzhou SinoType Technology Co., Ltd., 1991–1998 | 同上 | `0x0008` Editable | ❌ **不建议** |
+| `fonts/STZhongsong.ttf` | 华文中宋 STZhongsong | Changzhou SinoType Technology Co., Ltd., 1991–1998 | 同上 | `0x0008` Editable | ❌ **不建议** |
+
+**为什么 `fsType = Editable` 不代表可以随便分发？** `fsType` 描述的是「字体文件被嵌入 PDF 等文档时的权限」，**不是**「字体文件本身的再分发授权」。中易（ZhongYi）字体的授权文本明确写着：字体仅随「包含该字体的产品」使用，允许（i）以嵌入方式用于显示和打印内容，（ii）临时下载到打印机等输出设备。**授权文本中没有授予「复制并公开分发字体文件」的权利**。同理，华文系列字体也只声明了著作权归属，未授予再分发权。
+
+### 9.2 哪些行为可以、哪些不可以
+
+| 行为 | 结论 | 说明 |
+|---|---|---|
+| 在自己的电脑上安装使用这些字体排版论文 | ✅ 允许 | 商业字体本就是为此目的发布的 |
+| 用 `xelatex` 编译 PDF，把字体**嵌入**进 PDF | ✅ 允许 | 属于字体授权中「嵌入用于显示和打印内容」的情形 |
+| 把生成的 PDF 作为论文成品提交给组委会 | ✅ 通常允许 | 属个人作品的正常使用 |
+| 把**字体文件本身**放进 GitHub **公开**仓库 | ❌ 高风险 | 构成未经授权的再分发，可能被权利人主张侵权，GitHub 也可能收到 DMCA 投诉并直接封禁/删库 |
+| 上传字体压缩包到公开网盘、素材站、模板售卖页 | ❌ 禁止 | 同上，且属商业化分发，风险更高 |
+| 把含内嵌商业字体的论文 PDF 发布到公开网站 | ⚠ 谨慎 | 对外公开的 PDF 是「公开分发含该字体的文件」，建议改用开源字体重新编译（见 9.3 方案 A） |
+| 用本模板对外提供收费排版/代写服务 | ⚠ 谨慎 | 涉及字体嵌入的营利性使用，建议同样替换为开源字体 |
+| 在 README 中说明字体名称与来源 | ✅ 允许 | 提及名称不构成分发 |
+
+### 9.3 方案 A：公开仓库 → 替换为开源中文字体（推荐）
+
+如果仓库要公开托管，请用开源字体替换全部商业字体。**推荐组合**（均为自由授权，可随仓库分发）：
+
+| 原字体 | 开源替代 | 文件 | 授权 |
+|---|---|---|---|
+| 宋体 SimSun | 思源宋体 / Noto Serif CJK SC | `SourceHanSerifSC-Regular.otf` | OFL 1.1 |
+| 黑体 SimHei | 思源黑体 / Noto Sans CJK SC | `SourceHanSansSC-Regular.otf` | OFL 1.1 |
+| 楷体 SimKai | Fandol 楷体 / 文鼎 AR PL UKai | `FandolKai-Regular.otf` | GPL + font exception |
+| 仿宋 SimFang | Fandol 仿宋 | `FandolFang-Regular.otf` | GPL + font exception |
+| 隶书 LiSu | Fandol 楷体（视觉近似）或 Fandol 黑体 | `FandolKai-Regular.otf` | GPL + font exception |
+| 华文新魏 STXinwei | Fandol 楷体 + 保留阴影效果 | `FandolKai-Regular.otf` | GPL + font exception |
+| 华文中宋 STZhongsong | Fandol 宋体 | `FandolSong-Regular.otf` | GPL + font exception |
+
+> Fandol 系列随 TeX Live 的 `texlive-lang-chinese` 一并安装（`kpsewhich FandolSong-Regular.otf` 可查），思源 / Noto 系列需自行从官方仓库下载。
+
+**操作步骤：**
+
+**① 准备字体文件** — 把上表的开源字体放入 `fonts/`，然后从 `fonts/` 中**删除**这 8 个商业字体文件：
+
+```bash
+cd GMCMain
+rm fonts/SimSun.ttc fonts/SimHei.ttf fonts/SimKai.ttf fonts/SimFang.ttf \
+   fonts/LiSu.ttf fonts/STXinwei.ttf fonts/STZhongsong.ttf
+```
+
+**② 修改 `gmcm.cls`** — 把第 112–125 行的中文字体设置块替换为开源字体（第 113–125 行是 `\setCJKmainfont` / `\setCJKsansfont` / `\setCJKmonofont` 与 6 个 `\setCJKfamilyfont`；第 126–132 行的 `\songti`…`\zhongsong` 族命令**保持不变**）：
+
+```latex
+%% ---- 中文：全部改为开源字体 ----
+\setCJKmainfont[Path=\gmcm@fontpath,AutoFakeBold=2.5,ItalicFont=FandolKai-Regular.otf,BoldItalicFont=FandolKai-Regular.otf]{FandolSong-Regular.otf}
+\setCJKsansfont[Path=\gmcm@fontpath,AutoFakeBold=2.5]{FandolHei-Regular.otf}
+\setCJKmonofont[Path=\gmcm@fontpath,AutoFakeBold=2.5]{FandolFang-Regular.otf}
+\setCJKfamilyfont{zhsong}[Path=\gmcm@fontpath,AutoFakeBold=2.5,ItalicFont=FandolKai-Regular.otf,BoldItalicFont=FandolKai-Regular.otf]{FandolSong-Regular.otf}
+\setCJKfamilyfont{zhhei}[Path=\gmcm@fontpath,AutoFakeBold=2.5]{FandolHei-Regular.otf}
+\setCJKfamilyfont{zhkai}[Path=\gmcm@fontpath,AutoFakeBold=2.5]{FandolKai-Regular.otf}
+\setCJKfamilyfont{zhfs}[Path=\gmcm@fontpath,AutoFakeBold=2.5]{FandolFang-Regular.otf}
+%% 无开源等价字体的三个族：分别用楷体 / 黑体 / 宋体顶替，保证 \lishu \xinwei \zhongsong 命令仍可用
+\setCJKfamilyfont{zhli}[Path=\gmcm@fontpath,AutoFakeBold=2.5]{FandolHei-Regular.otf}
+\setCJKfamilyfont{zhxinwei}[Path=\gmcm@fontpath,AutoFakeBold=2.5]{FandolKai-Regular.otf}
+\setCJKfamilyfont{zhzhongsong}[Path=\gmcm@fontpath,AutoFakeBold=2.5]{FandolSong-Regular.otf}
+```
+
+> ⚠ `LiSu.ttf` 因为不含 OpenType script 表，类中原来用了 `Script=CustomDefault`；替换后该选项可以删掉。
+
+**③ 删除仓库中的商业字体** — 如果之前已经提交过，用 `git rm --cached` 取消跟踪并补一条提交：
+
+```bash
+git rm --cached fonts/SimSun.ttc fonts/SimHei.ttf fonts/SimKai.ttf fonts/SimFang.ttf \
+          fonts/LiSu.ttf fonts/STXinwei.ttf fonts/STZhongsong.ttf
+git commit -m "Replace commercial CJK fonts with open-source alternatives"
+git push
+```
+
+> ⚠ **注意**：从 Git 历史中彻底移除字体文件需要重写历史（`git filter-repo` / BFG），否则文件仍可从旧提交中检出。若仓库已公开，请参考 [9.5 清理历史](#95-清理已推送的历史)。
+
+**④ 验证编译**
+
+```bash
+latexmk -xelatex main.tex
+pdffonts build/main.pdf        # 检查实际内嵌了哪些字体
+```
+
+`pdffonts` 输出中不应再出现 `SimSun` / `SimHei` / `KaiTi` / `FangSong` / `LiSu` / `STXinwei` / `STZhongsong`。
+
+**更省事的替代做法**：不逐个替换文件，而是改用 ctex 内置的 Fandol 字体集——把 `gmcm.cls` 第 46 行
+
+```latex
+\LoadClass[UTF8,12pt,a4paper,zihao=-4,fontset=none]{ctexart}
+```
+
+改为
+
+```latex
+\LoadClass[UTF8,12pt,a4paper,zihao=-4,fontset=fandol]{ctexart}
+```
+
+并**整段删除**第 112–132 行（显式设字体的 6 个 `\setCJK*font` + 自定义 `\songti`…`\zhongsong` 七个命令），改用 ctex 自带的 `\songti` / `\heiti` / `\kaishu` / `\fangsong`；同时为 `\lishu` / `\xinwei` / `\zhongsong` 补上定义：
+
+```latex
+% ---- 中文字族命令：ctex(fandol) 提供 \songti \heiti \kaishu \fangsong；
+%      本模板额外用到的三个族在这里给出开源替代 ----
+\newcommand{\lishu}{\kaishu}
+\newcommand{\xinwei}{\kaishu}
+\newcommand{\zhongsong}{\songti}
+```
+
+**注意：不能只改 `fontset` 而保留第 112–132 行**，否则会因 `\CJKfamily{zhsong}` 不存在而报错。
+
+> ✅ 上述两种做法均已在本模板上实测：`latexmk -xelatex main.tex` 零错误编译通过，`pdffonts build/main.pdf` 中只剩 Fandol / TeX Gyre / STIX，不再含任何商业字体。
+
+### 9.4 方案 B：私有仓库 → 保留 `fonts/` 但做好标注
+
+若仓库必须为私有（例如团队内部协作），可以保留商业字体，但请注意：
+
+- 私有仓库**不等于**获得再分发授权，只是把传播范围限制在授权成员内；请确认学校/单位与字体厂商（如校园批量授权）的约定；
+- 在 README 顶部注明字体来源与用途，例如：
+  > `fonts/` 中的中文字体为版权方随操作系统提供的商业字体，仅供本团队内部排版使用，不对外分发。
+- 严格控制仓库成员与协作者名单，避免加入无关人员；
+- 团队成员本地编译时，字体统一由仓库提供，**不要**再放到公开网盘或模板市场；
+- 若后续要把仓库转为公开，务必先执行 9.3 方案 A。
+
+### 9.5 清理已推送的历史
+
+若商业字体已经进入过 Git 历史，仅在最新提交里删除是不够的——旧提交中仍可检出字体文件。两种处理方式：
+
+**方式一：改写历史（推荐，仓库已公开时必须做）**
+
+```bash
+# 安装：pip install git-filter-repo
+git filter-repo --path fonts --invert-paths          # 从所有历史提交中移除 fonts/ 目录
+git push --force --mirror origin                      # 强制推送改写后的历史
+```
+
+> ⚠ 改写历史会**改变所有提交哈希**，需要所有协作者重新克隆仓库；GitHub 上可能仍留有悬空对象缓存，公开仓库建议同时联系 GitHub Support 清理缓存。
+
+**方式二：重建仓库（历史不重要时更省事）**
+
+```bash
+cd ..
+mv GMCMain GMCMain_old
+mkdir GMCMain && cd GMCMain
+# 按 9.3 换好开源字体后，再把源码复制进来
+cp -r ../GMCMain_old/{main.tex,gmcm.cls,.latexmkrc,.gitignore,README.md,sections,code,figures,fonts} .
+git init -b main
+git add . && git commit -m "Initial commit: GMCM LaTeX template (open-source fonts only)"
+git remote add origin https://github.com/<你的用户名>/GMCMain.git
+git push -u origin HEAD --force
+```
+
+### 9.6 关于提交 PDF 成品
+
+- 本模板编译出的 PDF 会**内嵌**上述字体（`pdffonts build/main.pdf` 可查看内嵌列表）。
+- 将 PDF 提交给组委会、或在实验室内部传阅，属于字体授权允许的「嵌入用于显示与打印」场景，通常无碍。
+- 若要把论文 PDF 发布到**公开**网站（个人主页、公开网盘、在线文档），等同于公开分发含该字体的文件，**请改用 9.3 方案 A 的开源字体重新编译**后再发布。
+- GitHub 仓库本身已通过 `.gitignore` 排除 `build/` 与 `main.pdf`，提交前用 `git status` 再确认一次。
+
+### 9.7 免责声明
+
+- 上述版权信息来源于字体文件内部的 `name` / `OS/2` 表，可能与厂商最新公布的条款存在出入。
+- 字体厂商可能更新授权条款、更名或停止分发，本节内容无法自动同步，请以官方最新声明为准。
+- 商业字体在**中国大陆**的著作权由中易电子（宋体/黑体/楷体/仿宋）与相关厂商（华文系列、隶书）持有；不同地区的版权状态和合理使用边界可能不同。
+- 本模板作者不对因字体授权问题产生的纠纷承担责任；是否使用、如何使用，请使用者自行评估并负责。
+
+---
+
+## 10. 格式规范对照表
 
 | 官方规范（附件 2） | 模板实现 |
 |---|---|
@@ -402,7 +585,7 @@ latexmk -xelatex main.tex
 
 ---
 
-## 10. AI 工具使用标注
+## 11. AI 工具使用标注
 
 附件 4《人工智能工具及输出使用规定》对应到模板的三个命令：
 
@@ -437,7 +620,7 @@ latexmk -xelatex main.tex
 
 ---
 
-## 11. 参考文献格式
+## 12. 参考文献格式
 
 `sections/references.tex` 中的条目按官方规范手写，三种表述方式：
 
@@ -462,7 +645,7 @@ latexmk -xelatex main.tex
 
 ---
 
-## 12. 常见问题排查
+## 13. 常见问题排查
 
 | 现象 | 原因与解决 |
 |---|---|
@@ -483,9 +666,9 @@ latexmk -xelatex main.tex
 
 ---
 
-## 13. 提交前自查清单
+## 14. 提交前自查清单
 
-### 13.1 内容与格式
+### 14.1 内容与格式
 
 - [ ] 摘要 ≤ 2 页，包含建模思路、方法、模型、结果、创新点、关键词
 - [ ] 关键词 3–5 个，用中文分号分隔
@@ -498,28 +681,30 @@ latexmk -xelatex main.tex
 - [ ] **正文中不出现学校、姓名、队号等身份标志**
 - [ ] 附录含必要的程序清单与数据说明
 
-### 13.2 AI 使用标注（附件 4）
+### 14.2 AI 使用标注（附件 4）
 
 - [ ] AI 生成的模型/公式用 `\aimark{}` 标注，且参考文献中列有对应工具条目
 - [ ] AI 生成的数据分析结果前后有 `\ainote{}` 注释，写明名称、版本、机构、日期
 - [ ] AI 辅助编写的程序在文件头有注释说明
 - [ ] 最终文字为队伍自身表述
 
-### 13.3 隐私与仓库安全
+### 14.3 隐私与仓库安全
 
 - [ ] `main.tex` 中的 `\school` / `\teamnumber` / `\memberA..C` 仍为占位符
 - [ ] `git status` 中不含 `build/`、`*.pdf`、`*.log` 等产物
 - [ ] 未提交任何原始数据、密钥、`.env`、题面文件
 - [ ] 提交历史中没有被删除但仍可检索到的身份信息
 - [ ] 已确认仓库公开 / 私有属性符合预期
+- [ ] **若仓库为公开**：`fonts/` 中不含宋体/黑体/楷体/仿宋/隶书/华文新魏/华文中宋等商业字体（见 [第 9 节](#9-商业字体的使用说明与注意事项)）
+- [ ] **若商业字体曾进入过历史**：已按 9.5 清理，或已将仓库转为私有
 
 ---
 
-## 14. 上传到 GitHub
+## 15. 上传到 GitHub
 
 > 认证方式：**Personal access tokens (classic)**（HTTPS）。PAT 代替 GitHub 账户密码。
 
-### 14.1 创建 PAT classic
+### 15.1 创建 PAT classic
 
 1. GitHub → 头像 → **Settings** → **Developer settings**
 2. **Personal access tokens → Tokens (classic)** → **Generate new token (classic)**
@@ -529,7 +714,7 @@ latexmk -xelatex main.tex
 
 > 令牌等同于账户密码，切勿写进脚本、远程地址或提交记录。
 
-### 14.2 初始化并推送
+### 15.2 初始化并推送
 
 ```bash
 cd GMCMain
@@ -558,7 +743,7 @@ git push -u origin HEAD
 - **Username**：GitHub 用户名
 - **Password**：粘贴 PAT（**不是账户密码**；终端不回显属正常）
 
-### 14.3 后续更新
+### 15.3 后续更新
 
 ```bash
 git add .
@@ -566,7 +751,7 @@ git commit -m "描述本次修改"
 git push
 ```
 
-### 14.4 常见问题
+### 15.4 常见问题
 
 | 现象 | 说明 |
 |---|---|
@@ -578,10 +763,11 @@ git push
 
 ---
 
-## 15. 许可与致谢
+## 16. 许可与致谢
 
 - **模板代码**（`gmcm.cls`、`main.tex`、`sections/`、`code/`、`README.md`）：可自由修改使用。
-- **西文与数学字体**：TeX Gyre 系列为 GUST Font License，STIX Two Math 为 SIL Open Font License 1.1。
-- **中文字体**：宋体 / 黑体 / 楷体 / 仿宋 / 隶书 / 华文新魏 / 华文中宋为中易（ZhongYi）公司商业字体，**再分发可能涉及版权**，公开仓库请自行评估。
+- **西文与数学字体**：TeX Gyre 系列为 GUST Font License，STIX Two Math 为 SIL Open Font License 1.1，均可自由使用与再分发。
+- **中文字体**：宋体 / 黑体 / 楷体 / 仿宋 / 隶书 / 华文新魏 / 华文中宋为中易（ZhongYi）等公司的**商业字体**，仅授权「随含该字体的产品使用」与「嵌入用于显示和打印」，**未授予再分发权**。公开仓库请按 [第 9 节 商业字体的使用说明与注意事项](#9-商业字体的使用说明与注意事项) 换用开源字体（思源宋体/黑体、Fandol 系列等）；私有仓库请遵守 9.4 的约定。
 - **封面 logo**：中国研究生创新实践系列大赛 / 学位与研究生教育学会 / 华为 / 西安交通大学等标识归各自权利人所有，仅用于竞赛论文版式，请遵守各自的使用规范。
 - 本模板依据官方附件 2 / 3 / 4 整理，最终格式请以官方发布的最新文件为准。
+- 本仓库仅供学习与竞赛写作使用，字体与标识的合规性由使用者自行负责（详见 9.7 免责声明）。
